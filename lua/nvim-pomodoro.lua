@@ -1,83 +1,88 @@
+local popup_manager = require "nvim-pomodoro.popup"
+local utils = require "nvim-pomodoro.utils"
+
 local second = 1000
 local minute = 60 * second
 
-local notification_title = "Pomodoro"
-
-local default_notification_opts = { title = notification_title }
+local default_notification_opts = { title = "Pomodoro" }
 
 local settings = {
-  focus_period = 10 * second,
-  -- focus_period = 25 * minute,
-  break_period = 5 * minute
+  focus_period = 15 * minute,
+  break_period = 5 * minute,
+  long_break_period = 15 * minute,
 }
 
-local FOCUS_STATUS = "focus_status"
-local BREAK_STATUS = "break_status"
-local PAUSED_STATUS = "PAUSED_STATUS"
-local NOT_READY_STATUS = "NOT_READY_STATUS"
+local timer, popup, remaining_time
 
-local timer
-
-local status = NOT_READY_STATUS
-local remaining_time = settings.focus_period
-
-local function set_initial_period()
-  if status == NOT_READY_STATUS then
-    remaining_time = settings.focus_period
-  elseif status == FOCUS_STATUS then
-    remaining_time = settings.break_period
-  end
-
-  print("set initial period" .. remaining_time)
-end
-
-local function start_timer()
+local function start_timer_loop()
   timer = vim.loop.new_timer()
-
-  set_initial_period()
-
-  if status == NOT_READY_STATUS then
-    status = FOCUS_STATUS
-  elseif status == FOCUS_STATUS then
-    status = BREAK_STATUS
-  end
-
-  vim.notify("Pomodoro started", "alert", default_notification_opts)
 
   timer:start(second, second, function()
     remaining_time = remaining_time - second
 
-    print(remaining_time)
+    if popup_manager.is_active(popup) then
+      popup_manager.set_new_timer(popup, remaining_time)
+    end
 
     if remaining_time == 0 then
       timer:close()
-
-      vim.notify(status .. " finished", "alert", default_notification_opts)
+      vim.notify("Finished", "alert", default_notification_opts)
     end
   end)
 end
 
-local function pause_timer()
-  timer:close()
-  status = PAUSED_STATUS
+local function start_timer(initial_value)
+  popup_manager.open(popup)
 
-  vim.notify(
-    "Pomodoro paused at " .. remaining_time, "alert",
-    default_notification_opts
-  )
+  remaining_time = initial_value
+
+  popup_manager.set_new_timer(popup, remaining_time)
+
+  start_timer_loop()
+end
+
+local function start_focus()
+  start_timer(settings.focus_period)
+end
+
+local function start_break()
+  start_timer(settings.break_period)
+end
+
+local function start_long_break()
+  start_timer(settings.long_break)
+end
+
+local function toggle_popup()
+  if popup_manager.is_active(popup) then
+    popup = popup_manager.close(popup)
+  else
+    popup = popup_manager.open(popup)
+    popup_manager.set_new_timer(popup, remaining_time)
+  end
+end
+
+local function resume()
+  start_timer_loop()
+end
+
+local function pause()
+  timer:close()
 end
 
 local function get_status()
-  vim.notify(
-    "Current time: " .. remaining_time, "alert",
-    default_notification_opts
-  )
+  vim.notify("Current time: " .. utils.pretiffy_ms(remaining_time), "alert", default_notification_opts)
 end
 
-return {
-  start_timer = start_timer,
-  pause_timer = pause_timer,
-  resume_timer = start_timer,
-  get_status = get_status
+-- Plugin setup
+popup = popup_manager.create()
 
+return {
+  start_focus = start_focus,
+  start_break = start_break,
+  start_long_break = start_long_break,
+  toggle_popup = toggle_popup,
+  pause = pause,
+  resume = resume,
+  get_status = get_status,
 }

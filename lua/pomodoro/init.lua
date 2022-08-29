@@ -1,5 +1,5 @@
-local popup_manager = require "nvim-pomodoro.popup"
-local utils = require "nvim-pomodoro.utils"
+local popup_manager = require "pomodoro.popup"
+local utils = require "pomodoro.utils"
 
 local second = 1000
 local minute = 60 * second

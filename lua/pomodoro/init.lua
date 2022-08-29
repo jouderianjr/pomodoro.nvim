@@ -7,7 +7,7 @@ local minute = 60 * second
 local default_notification_opts = { title = "Pomodoro" }
 
 local settings = {
-  focus_period = 15 * minute,
+  focus_period = 25 * minute,
   break_period = 5 * minute,
   long_break_period = 15 * minute,
 }

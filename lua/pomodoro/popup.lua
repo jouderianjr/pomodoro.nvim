@@ -1,4 +1,4 @@
-local utils = require "nvim-pomodoro.utils"
+local utils = require "pomodoro.utils"
 local M = {}
 
 M.create = function()

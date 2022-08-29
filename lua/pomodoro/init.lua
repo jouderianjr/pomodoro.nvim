@@ -77,12 +77,12 @@ end
 -- Plugin setup
 popup = popup_manager.create()
 
-vim.api.nvim_set_keymap("n", "<leader>Pf", ":PomodoroStartFocus<CR>", {})
-vim.api.nvim_set_keymap("n", "<leader>Pb", ":PomodoroStartBreak<CR>", {})
-vim.api.nvim_set_keymap("n", "<leader>Plb", ":PomodoroLongBreak<CR>", {})
-vim.api.nvim_set_keymap("n", "<leader>Pp", ":PomodoroPause<CR>", {})
-vim.api.nvim_set_keymap("n", "<leader>Pr", ":PomodoroResume<CR>", {})
-vim.api.nvim_set_keymap("n", "<leader>Ptp", ":PomodoroTogglePopup<CR>", {})
+vim.api.nvim_set_keymap("n", "<C-P>f", ":PomodoroStartFocus<CR>", {})
+vim.api.nvim_set_keymap("n", "<C-P>b", ":PomodoroStartBreak<CR>", {})
+vim.api.nvim_set_keymap("n", "<C-P>lb", ":PomodoroLongBreak<CR>", {})
+vim.api.nvim_set_keymap("n", "<C-P>p", ":PomodoroPause<CR>", {})
+vim.api.nvim_set_keymap("n", "<C-P>r", ":PomodoroResume<CR>", {})
+vim.api.nvim_set_keymap("n", "<C-P>tp", ":PomodoroTogglePopup<CR>", {})
 
 return {
   start_focus = start_focus,

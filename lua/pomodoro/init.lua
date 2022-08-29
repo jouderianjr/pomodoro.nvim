@@ -82,6 +82,7 @@ vim.api.nvim_set_keymap("n", "<leader>Pb", ":PomodoroStartBreak<CR>", {})
 vim.api.nvim_set_keymap("n", "<leader>Plb", ":PomodoroLongBreak<CR>", {})
 vim.api.nvim_set_keymap("n", "<leader>Pp", ":PomodoroPause<CR>", {})
 vim.api.nvim_set_keymap("n", "<leader>Pr", ":PomodoroResume<CR>", {})
+vim.api.nvim_set_keymap("n", "<leader>Ptp", ":PomodoroTogglePopup<CR>", {})
 
 return {
   start_focus = start_focus,
